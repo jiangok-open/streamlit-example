@@ -25,4 +25,4 @@ rows = run_query("SELECT CUSTOMER_UUID from DWH_DEV.LIAN_TEST.PHONE_NUMBERCUSTOM
 
 # Print results.
 for row in rows:
-    st.write(f"{row[0]} has a :{row[1]}:")
+    st.write(f"got {row[0]}")
