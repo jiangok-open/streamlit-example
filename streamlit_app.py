@@ -21,7 +21,7 @@ def run_query(query):
         return cur.fetchall()
 
 
-rows = run_query("SELECT PHONE_NUMBER, CUSTOMER_UUID from DWH_DEV.LIAN_TEST.PHONE_NUMBERCUSTOMERUUIDMAP limit 10;")
+rows = run_query("SELECT CUSTOMER_UUID from DWH_DEV.LIAN_TEST.PHONE_NUMBERCUSTOMERUUIDMAP limit 10;")
 
 # Print results.
 for row in rows:
