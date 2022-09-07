@@ -1,9 +1,6 @@
-from collections import namedtuple
-import altair as alt
-import math
 import pandas as pd
-import streamlit as st
 import snowflake.connector
+import streamlit as st
 
 
 @st.experimental_singleton
@@ -18,11 +15,16 @@ conn = init_connection()
 def run_query(query):
     with conn.cursor() as cur:
         cur.execute(query)
-        return cur.fetchall()
+        rows = cur.fetchall()
+        return pd.DataFrame.from_records(rows, columns=['timestamp', 'engagement type'])
 
 
-rows = run_query("SELECT CUSTOMER_UUID from DWH_DEV.LIAN_TEST.PHONE_NUMBERCUSTOMERUUIDMAP limit 10;")
+propertyId = st.text_input(label="PropertyId:")
 
-# Print results.
-for row in rows:
-    st.write(f"got {row[0]}")
+query = "select timestamp, value:propertyEngagementEvent:propertyEngagementType from " \
+        "EVENT_INSTRUMENTATION.EVENTS.PROPERTY_LIFECYCLE_MESSAGE " \
+        f"where key ilike '{propertyId}' order by timestamp desc;"
+
+st.table(run_query(query))
+
+
