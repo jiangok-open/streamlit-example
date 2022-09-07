@@ -19,7 +19,7 @@ def run_query(query):
         return pd.DataFrame.from_records(rows, columns=['timestamp', 'engagement type'])
 
 
-propertyId = st.text_input(label="PropertyId:")
+propertyId = st.text_input(label="PropertyId:", value="4cc65f4f-f1c5-4257-97df-dc34465f90c1")
 
 query = "select timestamp, value:propertyEngagementEvent:propertyEngagementType from " \
         "EVENT_INSTRUMENTATION.EVENTS.PROPERTY_LIFECYCLE_MESSAGE " \
