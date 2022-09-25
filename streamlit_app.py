@@ -1,14 +1,19 @@
 import pandas as pd
 import snowflake.connector
 import streamlit as st
-
+import mysql.connector
 
 @st.experimental_singleton
 def init_connection():
     return snowflake.connector.connect(**st.secrets["snowflake"])
 
+@st.experimental_singleton
+def init_starrocks_connection():
+    return mysql.connector.connect(**st.secrets["starrocks"])
+
 
 conn = init_connection()
+starrocks_conn = init_starrocks_connection()
 
 
 @st.experimental_memo(ttl=600)
@@ -18,13 +23,15 @@ def run_query(query):
         rows = cur.fetchall()
         return pd.DataFrame.from_records(rows, columns=['timestamp', 'engagement type'])
 
+@st.experimental_memo(ttl=600)
+def run_starrocks_query(query):
+    with starrocks_conn.cursor() as cur:
+        cur.execute(query)
+        rows = cur.fetchall()
+        return pd.DataFrame.from_records(rows, columns=['c_custkey', 'c_name'])
 
-propertyId = st.text_input(label="PropertyId:", value="4cc65f4f-f1c5-4257-97df-dc34465f90c1")
 
-query = "select timestamp, value:propertyEngagementEvent:propertyEngagementType from " \
-        "EVENT_INSTRUMENTATION.EVENTS.PROPERTY_LIFECYCLE_MESSAGE " \
-        f"where key ilike '{propertyId}' order by timestamp desc;"
-
-st.table(run_query(query))
+query = "select c_custkey, c_name from customer limit 10"
+st.table(run_starrocks_query(query))
 
 

@@ -8,6 +8,7 @@ authors = ["lian.jiang <lian.jiang@opendoor.com>"]
 python = "^3.10"
 streamlit = "^1.11.0"
 snowflake-connector-python = "^2.7.12"
+mysql-connector-python = "^8.0.30"
 
 [tool.poetry.dev-dependencies]
 
